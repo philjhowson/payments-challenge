@@ -18,6 +18,6 @@ models:
     columns:
       - name: transaction_id
         description: "Should be the unique grain of this model."
-        # NOTE to candidate: is it actually unique in the raw data? Add a test.
         tests:
           - not_null
+          - unique
