@@ -8,37 +8,39 @@
 
 {{ config(
     materialized='incremental',
-    unique_key='transaction_id'
+    unique_key='wallet_id'
 ) }}
 
 with source as (
 
-    select transaction_id,
+    select 
         wallet_id,
-        merchant_id,
-        amount_cents,
-        currency,
+        member_id,
+        country,
+        onboarding_method,
+        marketing_channel,
         status,
-        decline_reason,
-        payment_method,
         created_at
-    from {{ source('raw', 'raw_transactions') }}
+    from {{ source('raw', 'raw_wallets') }}
 
 ),
+
+{#
+    here I use distinct to guard against any potential double records for wallet_id,
+    although, at the time there are no duplicates. This can safely be done because of
+    the grain of wallet_id, 1 row per id.
+#}
 
 renamed as (
 
     select
         distinct
-        transaction_id,
         wallet_id,
-        merchant_id,
-        cast(amount_cents as integer)                   as amount_cents,
-        cast(amount_cents as decimal(18, 2)) / 100.0    as amount_eur,
-        currency,
+        member_id,
+        upper(trim(country))                            as country,
+        onboarding_method,
+        marketing_channel,
         status,
-        nullif(decline_reason, '')                      as decline_reason,
-        payment_method,
         cast(created_at as timestamp)                   as created_at
     from source
 

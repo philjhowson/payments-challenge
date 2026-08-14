@@ -1,0 +1,115 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Raw, uncleaned source extracts loaded via `dbt seed`."
+    schema: main
+    tables:
+      - name: raw_transactions
+        description: "One row per payment attempt (in principle — mind the grain)."
+      - name: raw_wallets
+        description: "One row per wallet."
+      - name: raw_merchants
+        description: "One row per merchant."
+
+models:
+  - name: stg_transactions
+    description: "Cleaned, typed transactions. Example staging model — extend as needed."
+    columns:
+      - name: transaction_id
+        description: "Unique transaction identifier."
+        tests:
+          - not_null
+          - unique
+      - name: wallet_id
+        description: "Wallet that payment originated from."
+        tests:
+          - not_null
+      - name: merchant_id
+        description: "Merchant recieving funds."
+        tests:
+          - not_null
+      - name: amount_cents
+        description: "Transaction amount in cents. Refunds and reversals are not negative amounts."
+        tests:
+          - not_null
+      - name: amount_eur
+        description: "amount_cents / 100 to produce EUR value"
+        tests:
+          - not_null
+      - name: currency
+        description: "Transaction currency."
+        tests:
+          - not_null
+      - name: status
+        description: "Payment Status: refunded, authorized, reversed, declined."
+        tests:
+          - not_null
+      - name: decline_reason
+        description: "If a transaction was declined, the reasons is in this column."
+      - name: payment_method
+        description: "Method of payment: card, sdd"
+        tests:
+          - not_null
+      - name: created_at
+        description: "Timestamp to identify when the transaction took place."
+        tests:
+          - not_null
+        
+  - name: stg_wallets
+    columns:
+      - name: wallet_id
+        description: "Unique client identifier."
+        tests:
+          - not_null
+          - unique
+      - name: member_id
+        description: "Member ID associated to each wallet. Test assumes a one wallet to one member id relationship"
+        tests:
+          - unique
+      - name: country
+        description: "Country of the member."
+      - name: onboarding_method
+        description: "Payment method used for onboarding: card, sdd"
+        tests:
+          - not_null
+      - name: marketing_channel
+        description: "Channel through which the client joined."
+      - name: status
+        description: "Member status"
+        tests:
+          - not_null
+      - name: created_at
+        description: "Time the wallet_id was created"
+        tests:
+          - not_null
+
+  - name: stg_merchants
+    columns:
+      - name: merchant_id
+        description: "ID associated with a merchant. One row per ID."
+        tests:
+          - not_null
+          - unique
+      - name: merchant_name
+        description: "Name of the merchant associated with the id. Tests assume unique one to one
+                      relationship between ID and name."
+        tests:
+          - not_null
+          - unique
+      - name: mcc
+        description: "Merchant Category Code. Numerical association to category of sales."
+        tests:
+          - not_null
+      - name: segment
+        description: "English definition of the mcc."
+        tests:
+          - not_null
+      - name: country
+        description: "Country of merchant"
+        test:
+          - not_null
+      - name: onboarded_at
+        description: "Timestamp associated with when the merchant was onboarded"
+        tests:
+          - not_null
