@@ -1,5 +1,6 @@
 target/
 dbt_packages/
+dbt_internal_packages/
 logs/
 .venv/
 __pycache__/
@@ -11,4 +12,4 @@ __pycache__/
 profiles.yml
 .DS_Store
 Thumbs.db
-dbt_internal_packages/
+.user.yml
