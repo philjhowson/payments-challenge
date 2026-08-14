@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Raw, uncleaned source extracts loaded via `dbt seed`."
+    schema: main
+    tables:
+      - name: raw_transactions
+        description: "One row per payment attempt (in principle — mind the grain)."
+      - name: raw_wallets
+        description: "One row per wallet."
+      - name: raw_merchants
+        description: "One row per merchant."
+
+models:
+  - name: stg_transactions
+    description: "Cleaned, typed transactions. Example staging model — extend as needed."
+    columns:
+      - name: transaction_id
+        description: "Should be the unique grain of this model."
+        # NOTE to candidate: is it actually unique in the raw data? Add a test.
+        tests:
+          - not_null
