@@ -5,6 +5,7 @@ logs/
 seeds/
 .venv/
 __pycache__/
+.vscode/
 
 
 *.pyc
