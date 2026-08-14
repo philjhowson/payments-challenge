@@ -23,7 +23,7 @@ with source as (
         created_at
     from {{ source('raw', 'raw_wallets') }}
 
-),
+)
 
 {#
     here I use distinct to guard against any potential double records for wallet_id,
@@ -31,7 +31,7 @@ with source as (
     the grain of wallet_id, 1 row per id.
 #}
 
-renamed as (
+, renamed as (
 
     select
         distinct
@@ -57,3 +57,4 @@ where created_at >= (
 )
 
 {% endif %}
+

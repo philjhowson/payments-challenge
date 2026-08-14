@@ -24,9 +24,9 @@ with source as (
         created_at
     from {{ source('raw', 'raw_transactions') }}
 
-),
+)
 
-renamed as (
+, renamed as (
 
     select
         distinct

@@ -22,7 +22,7 @@ with source as (
         onboarded_at
     from {{ source('raw', 'raw_merchants') }}
 
-),
+)
 
 {#
     here I use distinct to guard against any potential double records for merchant_id,
@@ -30,7 +30,7 @@ with source as (
     the grain of merchant_id, 1 row per id.
 #}
 
-renamed as (
+, renamed as (
 
     select
         distinct
