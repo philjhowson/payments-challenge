@@ -2,6 +2,7 @@ target/
 dbt_packages/
 dbt_internal_packages/
 logs/
+seeds/
 .venv/
 __pycache__/
 
