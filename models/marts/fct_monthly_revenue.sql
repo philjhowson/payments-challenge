@@ -1,62 +1,28 @@
-with transactions as (
-
-    select *
-    from {{ ref('stg_transactions') }}
-
-)
-
-, merchants as (
-
-    select
-        merchant_id,
-        segment
-    from {{ ref('stg_merchants') }}
-
-)
-
-, transaction_revenue as (
+with monthly_revenue as (
 
     select
         strftime(created_at, '%Y-%m') as month,
-        m.segment,
-        t.status,
-        t.amount_cents
-
-    from transactions t
-
-    left join merchants m
-        on t.merchant_id = m.merchant_id
-
-)
-
-, monthly_revenue as (
-
-    select
-        month,
         segment,
 
-        sum(
-            case
-                when status = 'authorized' then amount_cents
-                else 0
-            end
-        ) as authorized_cents,
+        sum(case
+            when status = 'authorized'
+            then amount_eur
+            else 0
+        end) as authorized_eur,
 
-        sum(
-            case
-                when status = 'refunded' then amount_cents
-                else 0
-            end
-        ) as refunded_cents,
+        sum(case
+            when status = 'refunded'
+            then amount_eur
+            else 0
+        end) as refunded_eur,
 
-        sum(
-            case
-                when status = 'reversed' then amount_cents
-                else 0
-            end
-        ) as reversed_cents
+        sum(case
+            when status = 'reversed'
+            then amount_eur
+            else 0
+        end) as reversed_eur
 
-    from transaction_revenue
+    from {{ ref('int_transactions') }}
 
     group by
         month,
@@ -64,39 +30,39 @@ with transactions as (
 
 )
 
-, euro_amounts as (
-    select
-        month,
-        segment,
-        authorized_cents / 100.0 as authorized_eur,
-        refunded_cents / 100.0 as refunded_eur,
-        reversed_cents / 100.0 as reversed_eur,
-        (authorized_cents - refunded_cents - reversed_cents) / 100.0
-            as net_revenue_eur
-    from monthly_revenue
-)
+select
+    month,
+    segment,
+    round(authorized_eur, 2) as authorized_eur,
+    round(refunded_eur, 2) as refunded_eur,
+    round(reversed_eur, 2) as reversed_eur,
 
-, final as (
-    select
-        month,
-        segment,
-        authorized_eur,
-        refunded_eur,
-        reversed_eur,
-        net_revenue_eur,
-        round((net_revenue_eur
-            - lag(net_revenue_eur) over (
-                partition by segment
-                order by month)
-        ) / nullif(lag(net_revenue_eur) over (
-                partition by segment
-                order by month
-            ), 0
-        ), 2)                       as mom_change
+    round(
+        authorized_eur
+        - refunded_eur
+        - reversed_eur,
+        2
+    ) as net_revenue_eur,
 
-    from euro_amounts
-)
+    round(
+        (
+            authorized_eur
+            - refunded_eur
+            - reversed_eur
+        )
+        - lag(
+            authorized_eur
+            - refunded_eur
+            - reversed_eur
+        ) over (
+            partition by segment
+            order by month
+        ),
+        2
+    ) as mom_change_eur
 
-select *
-from final
-order by month
+from monthly_revenue
+
+order by
+    month,
+    segment
