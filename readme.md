@@ -85,6 +85,7 @@ This would provide a common view of business health while allowing Risk and comm
 
 - Wallet status reflects the **current status available in the source data**, not the historical status at a particular point in time. The dataset does not contain status-change timestamps, so historical churn or blocked events cannot be reliably reconstructed.
 - **740 wallet IDs referenced by transactions are not present in the wallet source table**, indicating a data-quality issue that would require further investigation.
+- Some transactions occur before the recorded merchant onboarding timestamp, affecting approximately 500 transactions. This indicates a potential timestamp or source-data quality issue that could not be reliably resolved from the available data.
 - Incremental models were considered based on transaction dates to determine whether new records could be appended to existing data. However, the presence of transaction records referencing wallet IDs that are missing from the wallet source means that backfilling may be necessary, and a different incremental strategy may be required in a production environment.
 
 ## How to Run
