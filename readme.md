@@ -8,9 +8,9 @@ Neither finding alone provides sufficient evidence of a risk event. The Septembe
 
 ## 1. Gift-Card Sales Increased Sharply in September
 
-Gift-card revenue increased by approximately **120% MoM in September** (`MoM change = +1.20`), substantially exceeding the changes observed across the other segments.
+In September, gift-card revenue increased by approximately **120% MoM in September** (`MoM change = +1.20`), substantially exceeding the changes observed across the other segments. Giftcard sales dropped below the baseline in October before returning to an upwards growth trajectory.
 
-The increase was disproportionately driven by **Italy** and **Austria**. In Italy, the gift-card sales were more than twice the level observed in the the previous month before returning toward baseline in October. The average transactions per wallet increased by over 1 transaction and the average purchase increased approximately 80 EUR. In Austria, the authorized transactions in EUR increased nearly 3 times, the number of unique wallets purchasing gift cards increased by almost double, and the transaction count more than doubled.
+The increase was disproportionately driven by **Italy** and **Austria**. In Italy, the gift-card sales were more than twice the level observed in the the previous month. The average transactions per wallet increased by over 1 transaction and the average purchase increased approximately 80 EUR. In Austria, the authorized transactions in EUR increased nearly 3 times, the number of unique wallets purchasing gift cards increased by almost double, and the transaction count more than doubled.
 
 ![Gift-card revenue by country group](images/giftcard_by_country.png)
 
