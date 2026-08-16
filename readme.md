@@ -75,10 +75,11 @@ This would provide a common view of business health while allowing Risk and comm
 
 # Project Structure
 
+# Project Structure
+
+```text
 payments/
-│
 ├── models/
-│   │
 │   ├── staging/
 │   │   ├── sources.yml
 │   │   ├── stg_merchants.sql
@@ -109,14 +110,27 @@ payments/
 ├── packages.yml
 ├── README.md
 └── .gitignore
+```
+
+### Project Structure
+
+The project follows a layered dbt structure:
 
 ### Project Structure
 
 The project follows a layered dbt structure:
 
 - **Staging** — cleans and standardizes the raw source data.
-- **Intermediate** — contains reusable business logic and enriched datasets.
-- **Marts** — contains the final analytical models used for reporting and analysis.
-- **Explore** — contains investigation-specific models that were useful for answering the September risk question but are not yet considered reusable production marts.
-- **Notebooks** — contains exploratory data analysis, DuckDB inspection, and investigation visualizations.
-- **Tests** — contains custom data-quality tests for business rules and data validity.
+- **Intermediate** — contains reusable business logic and enriched datasets that
+  can support multiple downstream analyses.
+- **Marts** — contains the final analytical models intended to expose stable
+  business metrics for reporting and stakeholder consumption.
+- **Explore** — contains investigation-specific models used to drill into
+  anomalies and answer ad-hoc business questions. These models are not intended
+  to form part of the core reporting layer. I would probably do these queries
+  in BigQuery as part of a deeper investigation before either surfacing
+  a relevant mart or providing a report of my findings.
+- **Notebooks** — contains exploratory data analysis, DuckDB inspection, and
+  investigation visualizations.
+- **Tests** — contains custom data-quality tests for business rules and data
+  validity.
