@@ -1,3 +1,8 @@
+{#
+    This table produces nulls because of the fact there seem to be transactions with wallet IDs that
+    do not match any wallets in stg_wallets.
+#}
+
 with merchants as (
 
     select
@@ -25,11 +30,8 @@ select
     t.status,
     m.segment,
     w.country
-
 from {{ ref('stg_transactions') }} t
-
 left join merchants m
     on t.merchant_id = m.merchant_id
-
 left join wallets w
     on t.wallet_id = w.wallet_id

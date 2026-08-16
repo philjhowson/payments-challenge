@@ -63,7 +63,6 @@ This would provide a common view of business health while allowing Risk and comm
 
 ## Assumptions, Limitations, & Data Caveats
 
-- A wallet is considered **activated** when it completes at least one authorized transaction within 30 days, but the metrics used to determine if a a wallet ID had churned were not clear in the data.
 - Wallet status reflects the **current status available in the source data**, not the historical status at a particular point in time. The dataset does not contain status-change timestamps, so historical churn/blocked events cannot be reliably reconstructed.
 - Month-over-month comparisons assume that the relevant monthly data is complete.
 - The most recent signup cohort does not yet have a complete 30-day observation window and is therefore not directly comparable with mature cohorts.
@@ -71,7 +70,8 @@ This would provide a common view of business health while allowing Risk and comm
 - Categorical fields such as transaction status, merchant segment, and wallet status were standardized during staging by trimming whitespace and normalizing case.
 - Transaction amounts were validated using a custom positive-value test rather than modified.
 - Unexpected onboarding values were flagged using a custom data-quality test rather than silently corrected.
-- Many data validations tests include not_null for example and with a years worth of data, it seems likely reliable that these values should not be null. Therefore, I am 80% confident in the inclusion of those not_null tests.
+- Many data validations dbt tests include not_null and with a years worth of data, it seems likely reliable that these values should not be null. Therefore, I am 80% confident in the inclusion of those not_null tests.
+- 740 wallet IDs referenced by transactions are not present in the wallet source table, indicating a data-quality issue that would require further investigation.
 
 ## How to Run
 
@@ -176,4 +176,3 @@ The project follows a layered dbt structure:
   investigation visualizations.
 - **Tests**: contains custom data-quality tests for business rules and data
   validity.
-

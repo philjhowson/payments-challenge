@@ -74,7 +74,9 @@ models:
         tests:
           - unique
       - name: country
-        description: "Country of the member."
+        description: "Country associated with the member."
+        tests:
+          - not_null
       - name: onboarding_method
         description: "Payment method used for onboarding: card, sdd"
         tests:

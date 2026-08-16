@@ -23,11 +23,6 @@ where status = 'authorized'
   and segment = 'giftcard'
   and created_at >= '2025-08-01'
   and created_at < '2025-11-01'
-
-group by
-    country,
-    strftime(created_at, '%Y-%m')
-
-order by
-    month asc,
-    authorized_eur desc
+  and country is not null
+group by country, strftime(created_at, '%Y-%m')
+order by month asc, authorized_eur desc
