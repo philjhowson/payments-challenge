@@ -65,17 +65,27 @@ I would also expose a broader **commercial performance view** covering:
 
 This would provide a common view of business health while allowing Risk and commercial stakeholders to investigate unusual movements from their respective perspectives.
 
-## Assumptions, Limitations, & Data Caveats
+## Assumptions & Limitations
 
-- Wallet status reflects the **current status available in the source data**, not the historical status at a particular point in time. The dataset does not contain status-change timestamps, so historical churn/blocked events cannot be reliably reconstructed.
+### Data Cleaning & Validation
+
+- Categorical fields such as transaction status, merchant segment, and wallet status were standardized during staging by trimming whitespace and normalizing case.
+- Transaction amounts were validated using a custom positive-value test. Given the available transaction data and business context, positive transaction amounts were treated as the expected condition.
+- Unexpected onboarding values were flagged using a custom data-quality test rather than silently corrected.
+- dbt `not_null` validations were applied to fields where completeness is expected based on the available year of historical data and their role in the analytical models.
+
+### Analytical Assumptions
+
+- A wallet is considered **activated** when it completes at least one authorized transaction within 30 days of signup.
 - Month-over-month comparisons assume that the relevant monthly data is complete.
 - The most recent signup cohort does not yet have a complete 30-day observation window and is therefore not directly comparable with mature cohorts.
 - Standard-deviation thresholds are used as **screening indicators**, not as evidence of causality or confirmed risk.
-- Categorical fields such as transaction status, merchant segment, and wallet status were standardized during staging by trimming whitespace and normalizing case.
-- Transaction amounts were validated using a custom positive-value test rather than modified.
-- Unexpected onboarding values were flagged using a custom data-quality test rather than silently corrected.
-- Many data validations dbt tests include not_null and with a years worth of data, it seems likely reliable that these values should not be null. Therefore, I am 80% confident in the inclusion of those not_null tests.
-- 740 wallet IDs referenced by transactions are not present in the wallet source table, indicating a data-quality issue that would require further investigation.
+
+### Data Quality & Limitations
+
+- Wallet status reflects the **current status available in the source data**, not the historical status at a particular point in time. The dataset does not contain status-change timestamps, so historical churn or blocked events cannot be reliably reconstructed.
+- **740 wallet IDs referenced by transactions are not present in the wallet source table**, indicating a data-quality issue that would require further investigation.
+- Incremental models were considered based on transaction dates to determine whether new records could be appended to existing data. However, the presence of transaction records referencing wallet IDs that are missing from the wallet source means that backfilling may be necessary, and a different incremental strategy may be required in a production environment.
 
 ## How to Run
 
