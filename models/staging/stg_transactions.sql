@@ -13,15 +13,7 @@
 
 with source as (
 
-    select transaction_id,
-        wallet_id,
-        merchant_id,
-        amount_cents,
-        currency,
-        status,
-        decline_reason,
-        payment_method,
-        created_at
+    select *
     from {{ source('raw', 'raw_transactions') }}
 
 )

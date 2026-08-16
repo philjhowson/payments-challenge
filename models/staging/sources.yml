@@ -12,6 +12,12 @@ sources:
       - name: raw_merchants
         description: "One row per merchant."
 
+# several of these models have tests for not_null under an assumption that they cannot be null,
+# backed by the evidence that there are no nulls in the set. However, I would need to know more
+# about how these schemas are designed to test more accurately. Some further tests I would
+# include with more time is ensuring that all members of the columns are allowed values, such
+# as I have done with the onboarding_method.
+
 models:
   - name: stg_transactions
     description: "Cleaned, typed transactions. Example staging model — extend as needed."
@@ -55,7 +61,7 @@ models:
         description: "Timestamp to identify when the transaction took place."
         tests:
           - not_null
-        
+
   - name: stg_wallets
     columns:
       - name: wallet_id

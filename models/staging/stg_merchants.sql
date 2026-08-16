@@ -13,13 +13,7 @@
 
 with source as (
 
-    select 
-        merchant_id,
-        merchant_name,
-        mcc,
-        segment,
-        country,
-        onboarded_at
+    select *
     from {{ source('raw', 'raw_merchants') }}
 
 )
@@ -28,6 +22,12 @@ with source as (
     here I use distinct to guard against any potential double records for merchant_id,
     although, at the time there are no duplicates. This can safely be done because of
     the grain of merchant_id, 1 row per id.
+
+    I used lower() and trim() for segment because I noticed they tend to be all lower case
+    and trim guards against accidental insertion of white spaces. Whether this is necessary
+    would really depend on how the data is inputted into the system and if there is any 
+    chance for some type of error to be introduced. The same is done defensively for country,
+    except with upper().
 #}
 
 , renamed as (
@@ -37,7 +37,7 @@ with source as (
         merchant_id,
         merchant_name,
         mcc,
-        segment,
+        lower(trim(segment))                    as segment,
         upper(trim(country))                    as country,
         cast(onboarded_at as timestamp)         as onboarded_at
     from source

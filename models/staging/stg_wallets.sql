@@ -13,14 +13,7 @@
 
 with source as (
 
-    select 
-        wallet_id,
-        member_id,
-        country,
-        onboarding_method,
-        marketing_channel,
-        status,
-        created_at
+    select *
     from {{ source('raw', 'raw_wallets') }}
 
 )
