@@ -12,6 +12,8 @@ Gift-card revenue increased by approximately **120% MoM in September** (`MoM cha
 
 The increase was disproportionately driven by **Italy** and **Austria**. In Italy, the gift-card sales were more than twice the level observed in the the previous month before returning toward baseline in October. The average transactions per wallet increased by over 1 transaction and the average purchase increased approximately 80 EUR. In Austria, the authorized transactions in EUR increased nearly 3 times, the number of unique wallets purchasing gift cards increased by almost double, and the transaction count more than doubled.
 
+![Gift-card revenue by country group](images/giftcard_revenue.png)
+
 This appears to be a **commercial anomaly rather than an immediate risk signal**. I would not surface the increase to Risk without first understanding its underlying drivers.
 
 Further investigation should decompose the increase into:
@@ -126,6 +128,11 @@ The Python work is intentionally kept separate from the dbt transformation layer
 
 ```text
 payments/
+├── images/
+│   ├── giftcard_by_country.png
+│   ├── mom_revenue_change.png
+│   ├── risk_plot.png
+│   └── wallet_activation.png 
 ├── models/
 │   ├── staging/
 │   │   ├── sources.yml
