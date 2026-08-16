@@ -31,6 +31,8 @@ The September signup cohort showed a decline in 30-day wallet activation MoM, ac
 
 However, the decline in activation remained **within 1 standard deviation of the yearly average**. Blocked and churned rates were somewhat elevated but likewise remained **within +1 standard deviation** of their yearly averages.
 
+![Risk Metrics based on wallet activity](images/risk_plot.png)
+
 Based on the available evidence, I would therefore treat September as a **signal worth monitoring rather than a confirmed risk anomaly**.
 
 The latest signup cohort also has an incomplete 30-day observation window. Consequently, its activation rate should not be interpreted as a genuine deterioration until the full 30-day period has elapsed. However, as mentioned, there was a decrease in November in activation and if the trend continues, this would be worth bringing to Risk's attention.
