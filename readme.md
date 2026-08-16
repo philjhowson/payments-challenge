@@ -1,14 +1,10 @@
-
-
-
 # Payments Analytics: September Investigation & Key Findings
 
 ## Executive Summary
 
 The analysis focused on commercial performance, wallet onboarding, and potential indicators of risk around the September period. Two notable changes emerged: a significant increase in gift-card sales and a decline in 30-day wallet activation.
 
-Neither finding alone provides sufficient evidence of a risk event, but both warrant monitoring and, where appropriate, further investigation. As of the end of November, there was additionally a decline in wallet activation, which could
-warrant further investigation and action depending on the outcomes of those findings.
+Neither finding alone provides sufficient evidence of a risk event. The September changes should therefore be treated as signals for monitoring and further investigation rather than confirmed anomalies. A further decline in wallet activation was observed in November; if this trend continues as the cohort matures, it would warrant additional investigation and potentially escalation to Risk.
 
 ## 1. Gift-Card Sales Increased Sharply in September
 
@@ -29,7 +25,7 @@ Understanding these drivers would help distinguish a legitimate commercial event
 
 ## 2. September Wallet Activation Declined
 
-The September signup cohort showed a decline in **30-day wallet activation MoM**, accompanied by a lower observed lifetime/current activation rate for the cohort.
+The September signup cohort showed a decline in 30-day wallet activation MoM, accompanied by a lower current active rate for the cohort.
 
 However, the decline in activation remained **within 1 standard deviation of the yearly average**. Blocked and churned rates were somewhat elevated but likewise remained **within +1 standard deviation** of their yearly averages.
 
@@ -65,15 +61,17 @@ I would also expose a broader **commercial performance view** covering:
 
 This would provide a common view of business health while allowing Risk and commercial stakeholders to investigate unusual movements from their respective perspectives.
 
-## Assumptions & Limitations
+## Assumptions, Limitations, & Data Caveats
 
-- A wallet is considered **activated** when it completes at least one authorized transaction and the metrics used to determine a wallet ID were not clear in the data.
+- A wallet is considered **activated** when it completes at least one authorized transaction within 30 days, but the metrics used to determine if a a wallet ID had churned were not clear in the data.
 - Wallet status reflects the **current status available in the source data**, not the historical status at a particular point in time. The dataset does not contain status-change timestamps, so historical churn/blocked events cannot be reliably reconstructed.
 - Month-over-month comparisons assume that the relevant monthly data is complete.
 - The most recent signup cohort does not yet have a complete 30-day observation window and is therefore not directly comparable with mature cohorts.
 - Standard-deviation thresholds are used as **screening indicators**, not as evidence of causality or confirmed risk.
-
-# Project Structure
+- Categorical fields such as transaction status, merchant segment, and wallet status were standardized during staging by trimming whitespace and normalizing case.
+- Transaction amounts were validated using a custom positive-value test rather than modified.
+- Unexpected onboarding values were flagged using a custom data-quality test rather than silently corrected.
+- Many data validations tests include not_null for example and with a years worth of data, it seems likely reliable that these values should not be null. Therefore, I am 80% confident in the inclusion of those not_null tests.
 
 # Project Structure
 
@@ -108,6 +106,7 @@ payments/
 │
 ├── dbt_project.yml
 ├── packages.yml
+├── requirements.txt
 ├── README.md
 └── .gitignore
 ```
@@ -120,17 +119,18 @@ The project follows a layered dbt structure:
 
 The project follows a layered dbt structure:
 
-- **Staging** — cleans and standardizes the raw source data.
-- **Intermediate** — contains reusable business logic and enriched datasets that
+- **Staging**: cleans and standardizes the raw source data.
+- **Intermediate**: contains reusable business logic and enriched datasets that
   can support multiple downstream analyses.
-- **Marts** — contains the final analytical models intended to expose stable
+- **Marts**: contains the final analytical models intended to expose stable
   business metrics for reporting and stakeholder consumption.
-- **Explore** — contains investigation-specific models used to drill into
+- **Explore**: contains investigation-specific models used to drill into
   anomalies and answer ad-hoc business questions. These models are not intended
   to form part of the core reporting layer. I would probably do these queries
   in BigQuery as part of a deeper investigation before either surfacing
   a relevant mart or providing a report of my findings.
-- **Notebooks** — contains exploratory data analysis, DuckDB inspection, and
+- **Notebooks**: contains exploratory data analysis, DuckDB inspection, and
   investigation visualizations.
-- **Tests** — contains custom data-quality tests for business rules and data
+- **Tests**: contains custom data-quality tests for business rules and data
   validity.
+
